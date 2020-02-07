@@ -67,7 +67,7 @@ endif()
 
 option(OSPRAY_APPS_ENABLE_DENOISER "Use image denoiser in example viewer")
 if (OSPRAY_APPS_ENABLE_DENOISER)
-  find_package(OpenImageDenoise 0.8 REQUIRED)
+  find_package(OpenImageDenoise 1.1.0 REQUIRED)
   set(OPENIMAGEDENOISE OpenImageDenoise)
 endif()
 
@@ -163,8 +163,8 @@ PUBLIC
   ospray_json
   ${HDF5_LIBRARIES}
   ${VTK_LIBRARIES}
-  ${OPENIMAGEIO_LIBRARIES}
   ${OPENIMAGEDENOISE}
+  ${OPENIMAGEIO_LIBRARIES}
 )
 
 target_include_directories(ospray_sg

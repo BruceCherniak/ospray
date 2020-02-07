@@ -117,7 +117,8 @@ namespace ospray {
         createNode(fileName.name(),"Texture2D"));
 
 #ifdef USE_OPENIMAGEIO
-      ImageInput *in = ImageInput::open(fileName.str().c_str());
+      //ImageInput *in = ImageInput::open(fileName.str().c_str());
+      ImageInput::unique_ptr in = ImageInput::open(fileName.str().c_str());
       if (!in) {
         std::cerr << "#osp:sg: failed to load texture '"+fileName.str()+"'" << std::endl;
         tex.reset();
@@ -136,7 +137,6 @@ namespace ospray {
 
         in->read_image(hdr ? TypeDesc::FLOAT : TypeDesc::UINT8, tex->data);
         in->close();
-        ImageInput::destroy(in);
 
         // flip image (because OSPRay's textures have the origin at the lower left corner)
         unsigned char* data = (unsigned char*)tex->data;
