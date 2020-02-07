@@ -280,8 +280,9 @@ const varying BSDF* varying Principled_getBSDF(const uniform PathTraceMaterial* 
           {
             // thin
             const vec3f transmissionColor = clamp(self->transmissionColor * get3f(self->transmissionColorMap, dg, make_vec3f(1.f)));
+            const float transmissionDepth = max(self->transmissionDepth * get1f(self->transmissionDepthMap, dg, 1.f), EPS);
             const float thickness = max(self->thickness * get1f(self->thicknessMap, dg, 1.f), 0.f);
-            const vec3f attenuation = logf(transmissionColor) / self->transmissionDepth * thickness;
+            const vec3f attenuation = logf(transmissionColor) / transmissionDepth * thickness;
 
             if (roughness < EPS)
               glassBsdf = ThinDielectric_create(ctx, baseFrame, eta, attenuation);
@@ -437,7 +438,7 @@ vec3f Principled_getTransparency(const uniform PathTraceMaterial* uniform materi
         {
           // thin
           const vec3f transmissionColor = clamp(self->transmissionColor * get3f(self->transmissionColorMap, dg, make_vec3f(1.f)));
-          const float transmissionDepth = max(self->transmissionDepth * get1f(self->transmissionDepthMap, dg, 1.f), 0.f);
+          const float transmissionDepth = max(self->transmissionDepth * get1f(self->transmissionDepthMap, dg, 1.f), EPS);
           const float thickness = max(self->thickness * get1f(self->thicknessMap, dg, 1.f), 0.f);
           const vec3f attenuation = logf(transmissionColor) / transmissionDepth * thickness;
 
@@ -518,7 +519,7 @@ void Principled_selectNextMedium(const uniform PathTraceMaterial* uniform super,
     float ior = self->ior * get1f(self->iorMap, dg, 1.f);
     if (ior < 1.f) ior = rcp(ior);
     const vec3f transmissionColor = clamp(self->transmissionColor * get3f(self->transmissionColorMap, dg, make_vec3f(1.f)));
-    const float transmissionDepth = max(self->transmissionDepth * get1f(self->transmissionDepthMap, dg, 1.f), 0.f);
+    const float transmissionDepth = max(self->transmissionDepth * get1f(self->transmissionDepthMap, dg, 1.f), EPS);
 
     currentMedium.ior = ior;
     currentMedium.attenuation = logf(transmissionColor) / transmissionDepth;
